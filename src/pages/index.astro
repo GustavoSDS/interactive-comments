@@ -1,13 +1,50 @@
 ---
-import Layout from '../layouts/Layout.astro';
+import Modal from "@components/Modal.astro";
+import Layout from "../layouts/Layout.astro";
+import data from "../data.json";
+import { Image } from "astro:assets";
+import DotPattern from "@components/DotPattern";
+import CreateComment from "@components/sections/CreateComment";
+import type { User } from "@types";
+
+const currentUser: User = data.currentUser;
+console.log(typeof currentUser);
 ---
 
-<Layout title="Welcome to Astro.">
-	<main>
-		<h1>Interactive <span class="text-red-400">Section</span></h1>
-		<button class="uppercase w-28 h-10">
-			send
-		</button>
+<Layout title="Interactive secions comments">
+	<main class="relative container p-2 xl:p-4 w-full">
+		<div
+			class="flex w-40 h-40 flex-col items-center justify-center gap-y-1 xl:gap-y-2 absolute top-2 right-2 md:top-3 md:p-3 xl:p-4">
+			<Image
+				src={`/${currentUser.image.webp}`}
+				height={1000}
+				width={1000}
+				quality={100}
+				alt={currentUser.username}
+				class="w-16 h-16 object-cover rounded-full"
+			/>
+			<h2 class="text-lg capitalize">{currentUser.username}</h2>
+			<p class="text-grayishBlue text-sm">Development</p>
+			<DotPattern />
+		</div>
+
+		<pre>{JSON.stringify(data.currentUser, undefined, 2)}</pre>
+		<!-- <pre>{JSON.stringify(data.comments, undefined, 2)}</pre> -->
+
+		<CreateComment user={currentUser} />
 	</main>
+
+	<Modal />
 </Layout>
 
+<style>
+	.comment {
+		grid-column: 1 / 2;
+	}
+	.profile {
+		grid-column: 2 / 3;
+	}
+	.btnSend {
+		grid-column: 3 / 4;
+	}
+</style>
