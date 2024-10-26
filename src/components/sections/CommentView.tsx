@@ -1,12 +1,12 @@
+import { IconDelete, IconEdit, IconMinus, IconPlus, IconReply } from '../ui/Icons';
 import { useState } from 'preact/hooks';
 import { useComments } from './CommentsContext';
 import type { CommentElement, User } from '@types';
 import Profile from '@components/ui/Profile';
 import CreateComment from './CommentCreate';
-import { IconDelete, IconEdit, IconMinus, IconPlus, IconReply } from '@components/ui/Icons';
 import Button from '@components/ui/Button';
-import clsx from 'clsx';
 import { Modal } from '@components/ui/Modal';
+import clsx from 'clsx';
 
 interface CommentProps {
     comment: CommentElement;

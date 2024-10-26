@@ -9,9 +9,6 @@
       "@buttons/*": [
         "src/components/buttons*"
       ],
-      "@icons/*": [
-        "src/components/icons/*"
-      ],
       "@layouts/*": [
         "src/layouts/*"
       ],
