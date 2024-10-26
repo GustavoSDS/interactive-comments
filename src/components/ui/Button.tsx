@@ -6,15 +6,16 @@ interface Props {
     className?: string;
     children?: preact.ComponentChildren;
     icon?: preact.ComponentChildren;
+    onClick?: () => void;
 }
 
-const Button = ({ typeButton, hasABackground = false, className, children, icon }: Props) => {
-    const btnDelete = hasABackground 
-        ? "hover:bg-paleRed bg-softRed" 
+const Button = ({ typeButton, hasABackground = false, className, children, icon, onClick }: Props) => {
+    const btnDelete = hasABackground
+        ? "hover:bg-paleRed bg-softRed"
         : "fill-softRed hover:fill-paleRed text-softRed hover:text-paleRed";
 
-    const btnReply = hasABackground 
-        ? "hover:bg-lightGrayishBlue bg-moderateBlue" 
+    const btnReply = hasABackground
+        ? "hover:bg-lightGrayishBlue bg-moderateBlue"
         : "fill-moderateBlue hover:fill-lightGrayishBlue text-moderateBlue hover:text-lightGrayishBlue !p-0";
 
     const btnDefault = "hover:bg-lightGrayishBlue bg-moderateBlue min-w-20";
@@ -42,6 +43,7 @@ const Button = ({ typeButton, hasABackground = false, className, children, icon 
 
     return (
         <button
+            onClick={onClick}
             className={clsx(
                 "w-fit h-10 rounded-lg flex items-center justify-center gap-x-2 font-medium capitalize",
                 hasABackground ? "text-white !uppercase !min-w-24 px-5 py-3" : "px-0 h-fit w-fit",

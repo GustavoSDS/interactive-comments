@@ -9,7 +9,7 @@ export type CommentElement = {
     createdAt:   string;
     score:       number;
     user:        User;
-    replies?:    CommentElement[];
+    replies?:    CommentElement[] | undefined;
     replyingTo?: string;
 }
 
