@@ -1,38 +1,22 @@
-import type { CommentElement, User } from '@types';
-import { useState, useEffect } from 'preact/hooks';
+import type { User } from '@types';
 import { CommentList } from './CommentList';
-import CreateComment from './CreateComment';
-
+import CreateComment from './CommentCreate';
+import { useComments } from './CommentsContext';
 interface CommentSectionProps {
     currentUser: User;
-    comments: CommentElement[];
 }
 
-export const CommentSection = ({ currentUser, comments: initialComments= [] }: CommentSectionProps) => {
-    const [comments, setComments] = useState<CommentElement[]>(initialComments);
+export const CommentSection = ({ currentUser }: CommentSectionProps) => {
+    const { comments, addComment } = useComments();
 
-    useEffect(() => {
-        setComments(initialComments || []);
-    }, [initialComments]);
-
-    const handleAddComment = (text: string) => {
-        if (!text.trim()) return;
-
-        const newComment: CommentElement = {
-            id: Date.now(),
-            content: text,
-            user: currentUser,
-            createdAt: "just now",
-            score: 0,
-        };
-
-        setComments([newComment, ...comments]);
-    };
 
     return (
-        <div className="max-w-md md:max-w-xl mx-auto p-4 lg:p-8 xl:p-12">
-            <CommentList comments={comments} />
-            <CreateComment user={currentUser} onSend={handleAddComment} />
+        <div className="max-w-md md:max-w-xl xl:max-w-2xl 2xl:max-w-3xl mx-auto p-4">
+            <CommentList comments={comments} currentUser={currentUser} />
+            <CreateComment
+                user={currentUser}
+                onSend={(text) => addComment(text, currentUser)}
+            />
         </div>
     );
 };
