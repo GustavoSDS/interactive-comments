@@ -1,35 +1,50 @@
-import Button from "@components/buttos/Button";
-import type { User } from "@types"
+import { h } from 'preact';
+import { useState } from 'preact/hooks';
+import Profile from "@components/ui/Profile";
+import type { User } from "@types";
+import Button from '@components/ui/Button';
+
 interface Props {
-    user: User
+    user: User;
+    onSend: (text: string) => void;
 }
 
-export default function CreateComment(props: Props) {
-    const { username, image } = props.user;
+export default function CreateComment({ user, onSend }: Props) {
+    const [comment, setComment] = useState<string>("");
+
+    const handleSubmit = (e: Event) => {
+        e.preventDefault();
+        if (comment.trim()) {
+            onSend(comment);
+            setComment(""); // Limpiar el textarea después de enviar
+        }
+    };
 
     return (
-        <div class={"grid grid-cols-2 gap-y-4 max-w-sm w-full p-4 md:flex items-start md:gap-x-4 md:max-w-[732px] border border-moderateBlue justify-between"}>
-            <div class={"w-12 col-span-1 md:w-12"}>
-                <img
-                    src={`/${image.webp}`}
-                    alt={username}
-                    width={1000}
-                    height={1000}
-                    class={"w-10 h-10 col-span-1"}
-                />
+        <form
+            onSubmit={handleSubmit}
+            class="fixed bottom-0 left-1/2 right-1/2 -translate-x-1/2 grid grid-rows-1 gap-y-4 max-w-md w-full p-4 h-fit md:p-6 md:flex md:items-start md:gap-x-4 md:max-w-lg lg:max-w-[732px] md:justify-between bg-white rounded-md"
+        >
+            <div class="w-fit [grid-row:2] h-fit">
+                <Profile user={user} onlyPhoto={true} />
             </div>
             <textarea
+                name={"comment"}
                 id="comment"
-                class={"col-span-2 w-full resize-none h-24 rounded-lg px-6 py-3 text-grayishBlue border border-lightGrayishBlue bg-lightGray outline-none focus:border-moderateBlue md:w-[506px] flex-shrink"}
-                placeholder={"Add a comment.."}
+                value={comment}
+                onInput={(e) => setComment((e.target as HTMLTextAreaElement).value)}
+                class="col-span-2 [grid-row:1] w-full resize-none h-24 rounded-lg px-6 py-3 text-grayishBlue border border-lightGray outline-none focus:border-moderateBlue md:max-w-[506px] flex-shrink"
+                placeholder="Add a comment.."
             />
-            <div class={"w-full flex items-center justify-end"}>
-                <Button typeButton="default"
+            <div class="w-full h-fit flex items-center justify-end md:w-auto">
+                <Button
+                    typeButton="default"
                     hasABackground
-                    className="col-span-1 !w-[104px] !h-12">
+                    className="!w-[104px] !h-12"
+                >
                     send
                 </Button>
             </div>
-        </div>
-    )
+        </form>
+    );
 }

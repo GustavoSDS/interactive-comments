@@ -1,4 +1,3 @@
-import { h } from 'preact';
 import { clsx } from 'clsx';
 
 interface Props {
@@ -16,9 +15,9 @@ const Button = ({ typeButton, hasABackground = false, className, children, icon 
 
     const btnReply = hasABackground 
         ? "hover:bg-lightGrayishBlue bg-moderateBlue" 
-        : "fill-moderateBlue hover:fill-lightGrayishBlue text-moderateBlue hover:text-lightGrayishBlue";
+        : "fill-moderateBlue hover:fill-lightGrayishBlue text-moderateBlue hover:text-lightGrayishBlue !p-0";
 
-    const btnDefault = "hover:bg-lightGrayishBlue bg-moderateBlue";
+    const btnDefault = "hover:bg-lightGrayishBlue bg-moderateBlue min-w-20";
     const btnCancel = "hover:bg-lightGrayishBlue bg-grayishBlue text-white";
 
     let btnClass;
@@ -44,8 +43,8 @@ const Button = ({ typeButton, hasABackground = false, className, children, icon 
     return (
         <button
             className={clsx(
-                "w-fit min-w-20 h-10 rounded-lg flex items-center justify-center gap-x-2 font-medium px-5 py-3 capitalize",
-                hasABackground && "text-white !uppercase !min-w-24",
+                "w-fit h-10 rounded-lg flex items-center justify-center gap-x-2 font-medium capitalize",
+                hasABackground ? "text-white !uppercase !min-w-24 px-5 py-3" : "px-0 h-fit w-fit",
                 className,
                 btnClass
             )}
