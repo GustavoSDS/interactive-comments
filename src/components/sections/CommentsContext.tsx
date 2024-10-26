@@ -161,6 +161,7 @@ export const CommentsProvider = ({ children, currentUsername }: CommentsProvider
             });
         });
     };
+    
 
     return (
         <CommentsContext.Provider value={{ comments, addComment, addReply, editComment, deleteComment, upvoteComment, downvoteComment }}>

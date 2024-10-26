@@ -25,8 +25,8 @@ export default function CreateComment({ user, onSend, isReply }: Props) {
     return (
         <form
             onSubmit={handleSubmit}
-            class={clsx("grid grid-rows-1 gap-y-4 max-w-md w-full p-4 h-fit md:p-6 md:flex md:items-start md:gap-x-4 md:max-w-lg lg:max-w-[732px] md:justify-between bg-white rounded-md"
-                , isReply ? "relative" : "fixed bottom-0 left-1/2 right-1/2 -translate-x-1/2"
+            class={clsx("grid grid-rows-1 gap-y-4 max-w-md w-full p-4 h-fit md:p-6 md:flex md:items-start md:gap-x-4 sm:max-w-lg lg:max-w-[732px] md:justify-between bg-white rounded-md"
+                , isReply ? "relative" : "fixed bottom-3 2xl:bottom-8 left-1/2 right-1/2 -translate-x-1/2"
             )}
         >
             <div class="w-fit [grid-row:2] h-fit">

@@ -5,6 +5,8 @@ import Profile from '@components/ui/Profile';
 import CreateComment from './CommentCreate';
 import { IconDelete, IconEdit, IconMinus, IconPlus, IconReply } from '@components/ui/Icons';
 import Button from '@components/ui/Button';
+import clsx from 'clsx';
+import { Modal } from '@components/ui/Modal';
 
 interface CommentProps {
     comment: CommentElement;
@@ -12,41 +14,57 @@ interface CommentProps {
 }
 
 export const CommentView = ({ comment, currentUser }: CommentProps) => {
-    const { addReply, editComment, deleteComment, upvoteComment, downvoteComment } = useComments();
+    const { editComment, deleteComment, upvoteComment, downvoteComment } = useComments();
     const [isReplying, setIsReplying] = useState(false);
     const [isEditing, setIsEditing] = useState(false);
     const [editedText, setEditedText] = useState(comment.content);
+	const [isOpen, setIsOpen] = useState(false);
 
-    const classBntDelete = isEditing ? "sm:absolute top-5 right-10" : "relative";
+    const classBntDelete = isEditing ? "sm:absolute top-8 right-6" : "relative";
 
     return (
-        <div class="flex flex-col gap-y-4">
+        <div class="flex flex-col gap-y-4 lg:gap-y-5">
             {/* Contenedor principal del comentario */}
-            <div key={comment.id} class="p-4 rounded-md bg-white shadow-sm flex flex-col gap-y-4 relative">
+            <div key={comment.id} class="p-4 md:p-6 rounded-md bg-white shadow-sm flex flex-col gap-4 md:flex-row-reverse md:items-start relative">
 
-                {/* Perfil y tiempo */}
-                {comment.user.username === currentUser.username ? (
-                    <Profile user={comment.user} onlyPhoto={false} isLoggedIn={true} createdAt={comment.createdAt} />
-                ) : (
-                    <Profile user={comment.user} onlyPhoto={false} createdAt={comment.createdAt} />
-                )}
+                <div class="w-full flex flex-col gap-y-4">
+                    {/* Perfil y tiempo */}
+                    {comment.user.username === currentUser.username ? (
+                        <Profile user={comment.user} onlyPhoto={false} isLoggedIn={true} createdAt={comment.createdAt} className='!w-8 !h-8'/>
+                    ) : (
+                        <Profile user={comment.user} onlyPhoto={false} createdAt={comment.createdAt} className='!h-8 !w-8'/>
+                    )}
 
-                {/* Contenido del comentario o editor */}
-                {isEditing ? (
-                    <textarea
-                        class="w-full min-w-full resize-y min-h-fit max-h-64 h-full  rounded-lg px-6 py-3 text-grayishBlue border border-lightGray outline-none focus:border-moderateBlue flex-shrink [&::-webkit-scrollbar]:w-2 [&::-webkit-scrollbar-track]:bg-transparent [&::-webkit-scrollbar-thumb]:bg-lightGrayishBlue [&::-webkit-scrollbar-thumb]:rounded-lg"
-                        value={editedText}
-                        rows={comment.content.length > 10 ? 5 : 3}
-                        onInput={(e) => setEditedText((e.target as HTMLTextAreaElement).value)}
-                    />
-                ) : (
-                    <p class="text-grayishBlue">{comment.content}</p>
-                )}
+                    {/* Contenido del comentario o editor */}
+                    {isEditing ? (
+                        <>
+                            <textarea
+                                class="w-full min-w-full resize-y min-h-36 md:min-h-28 max-h-64 h-full  rounded-lg px-6 py-3 text-grayishBlue border border-lightGray outline-none focus:border-moderateBlue flex-shrink [&::-webkit-scrollbar]:w-2 [&::-webkit-scrollbar-track]:bg-transparent [&::-webkit-scrollbar-thumb]:bg-lightGrayishBlue [&::-webkit-scrollbar-thumb]:rounded-lg"
+                                value={editedText}
+                                onInput={(e) => setEditedText((e.target as HTMLTextAreaElement).value)}
+                            />
+                            <Button
+                                typeButton="default"
+                                hasABackground
+                                className='!px-1 text-sm sm:text-base !min-w-10 sm:!min-w-24 hidden md:flex self-end'
+                                onClick={() => {
+                                    editComment(comment.id, editedText);
+                                    setIsEditing(false);
+                                }}
+                            >
+                                update
+                            </Button>
+                        </>
+                    ) : (
+                        <p class="text-grayishBlue">{comment.content}</p>
+                    )}
+
+                </div>
 
                 {/* Barra de interacción */}
                 <div class="flex items-center justify-between">
                     {/* Botones de voto */}
-                    <div class="flex gap-x-2 items-center bg-veryLightGray rounded-md h-10 min-w-16 sm:min-w-24">
+                    <div class="flex md:flex-col-reverse gap-x-0 sm:gap-x-2 items-center bg-veryLightGray rounded-md h-10 min-w-20 sm:min-w-24 md:min-w-10 md:min-h-24">
                         <button
                             onClick={() => upvoteComment(comment.user.username)}
                             class="h-full w-full grid place-items-center border-none text-lightGrayishBlue hover:text-moderateBlue"
@@ -64,16 +82,17 @@ export const CommentView = ({ comment, currentUser }: CommentProps) => {
 
                     {/* Botones de acciones (Eliminar, Editar, Responder) */}
                     {comment.user.username === currentUser.username ? (
-                        <div class="flex gap-x-2 sm:gap-x-4 items-center">
-                            <Button typeButton="delete" onClick={()=>deleteComment(comment.id)} className={classBntDelete}>
+                        <div class={clsx("flex gap-x-2 sm:gap-x-4 items-center", !isEditing && "md:absolute top-8 right-6")}>
+                            <Button typeButton="delete" onClick={() => setIsOpen(true)} className={classBntDelete}>
                                 <IconDelete />
                                 delete
                             </Button>
+
                             {isEditing ? (
                                 <Button
                                     typeButton="default"
                                     hasABackground
-                                    className='!px-1 text-sm sm:text-base !min-w-10 sm:!min-w-24'
+                                    className='!px-1 text-sm sm:text-base !min-w-10 sm:!min-w-24 md:hidden'
                                     onClick={() => {
                                         editComment(comment.id, editedText);
                                         setIsEditing(false);
@@ -89,7 +108,7 @@ export const CommentView = ({ comment, currentUser }: CommentProps) => {
                             )}
                         </div>
                     ) : (
-                        <Button typeButton="reply" className="!p-0" onClick={()=>setIsReplying(!isReplying)}>
+                        <Button typeButton="reply" className="!p-0 md:absolute top-8 right-6" onClick={() => setIsReplying(!isReplying)}>
                             <IconReply />
                             Reply
                         </Button>
@@ -103,7 +122,14 @@ export const CommentView = ({ comment, currentUser }: CommentProps) => {
                     <CreateComment
                         user={currentUser}
                         onSend={(text) => {
-                            addReply(text, comment.id, currentUser);
+                            const newReply: CommentElement = {
+                                id: Date.now(),
+                                content: text,
+                                user: currentUser,
+                                createdAt: "just now",
+                                score: 0,
+                            };
+                            comment.replies = [...(comment.replies || []), newReply];
                             setIsReplying(false);
                         }}
                         isReply
@@ -113,12 +139,15 @@ export const CommentView = ({ comment, currentUser }: CommentProps) => {
 
             {/* Lista de respuestas */}
             {comment.replies && comment.replies.length > 0 && (
-                <div class="border-l pl-4 flex flex-col gap-y-4">
+                <div class="border-l pl-4 md:pl-6 2xl:pl-11 lg:ml-6 2xl:ml-11 flex flex-col gap-y-4 lg:gap-y-6">
                     {comment.replies.map((reply) => (
                         <CommentView key={reply.id} comment={reply} currentUser={currentUser} />
                     ))}
                 </div>
             )}
+
+
+            <Modal isOpen={isOpen} handleDelete={() => deleteComment(comment.id)} handleCancel={() => setIsOpen(false)} />
         </div>
     );
 };
