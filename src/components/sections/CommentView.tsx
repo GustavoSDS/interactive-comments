@@ -1,4 +1,4 @@
-import { IconDelete, IconEdit, IconMinus, IconPlus, IconReply } from '../ui/Icons';
+import { IconDelete, IconEdit, IconMinus, IconPlus, IconReply } from '../ui/icons';
 import { useState } from 'preact/hooks';
 import { useComments } from './CommentsContext';
 import type { CommentElement, User } from '@types';
