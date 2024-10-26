@@ -1,6 +1,5 @@
 import Button from '@components/ui/Button';
 import clsx from 'clsx';
-import { useState } from 'preact/hooks';
 
 interface Props {
 	isOpen: boolean;

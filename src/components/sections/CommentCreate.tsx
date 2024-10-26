@@ -1,4 +1,3 @@
-import { h } from 'preact';
 import { useState } from 'preact/hooks';
 import Profile from "@components/ui/Profile";
 import type { User } from "@types";
